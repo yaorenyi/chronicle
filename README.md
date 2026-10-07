@@ -5,7 +5,21 @@
 - **框架**：Hexo 7.3.0
 - **主题**：[hexo-theme-async](https://github.com/MaLuns/hexo-theme-async) 1.2.14
 - **数据源**：AI HOT 公开日报接口
-- **线上地址**：<https://yaorenyi.github.io/chronicle/>
+- **线上地址**：<https://blog.wolkasem.cn/>（自定义域名）
+
+## 域名配置
+
+站点使用自定义域名 `blog.wolkasem.cn`，仓库内通过 `source/CNAME` 声明。
+
+DNS 记录（托管在 Cloudflare）：
+
+| 类型 | 名称 | 目标 | 代理状态 |
+| --- | --- | --- | --- |
+| CNAME | `blog` | `yaorenyi.github.io` | **仅 DNS（灰云，必须关闭橙云）** |
+
+> Cloudflare 橙云代理会导致 GitHub Pages 的域名校验与 HTTPS 证书签发失败，必须关闭。
+
+切换到自定义域名后，`_config.yml` 中的 `root` 必须为 `/`（不能是 `/chronicle/`），否则静态资源与文章链接会带上项目名前缀而全部 404。
 
 ## 日报长什么样
 
