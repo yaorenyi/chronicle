@@ -6,9 +6,11 @@ author: wolkasem
 language: zh-CN
 timezone: Asia/Shanghai
 
-# 站点 URL。GitHub Pages 项目页为 https://<user>.github.io/<repo>
-url: https://yaorenyi.github.io
-root: /chronicle/
+# 站点 URL。使用自定义域名 blog.wolkasem.cn
+# 注意:换成自定义域名后 root 必须为 /,
+# 否则静态资源与文章链接会带上 /chronicle 前缀而全部 404
+url: https://blog.wolkasem.cn
+root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
   lang: zh-CN
