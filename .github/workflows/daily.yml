@@ -1,0 +1,89 @@
+name: 构建并发布 Chronicle
+
+on:
+  schedule:
+    # 每天北京时间 08:20 生成日报并构建(UTC 00:20)
+    - cron: "20 0 * * *"
+  workflow_dispatch:
+    inputs:
+      date:
+        description: '指定日期 YYYY-MM-DD,留空则取最新一期'
+        required: false
+      backfill:
+        description: '回补最近 N 期(与 date 二选一使用)'
+        required: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # 保留历史文章:回补和重新构建都依赖完整历史
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: 同步日报文章
+        env:
+          DATE_INPUT: ${{ inputs.date }}
+          BACKFILL_INPUT: ${{ inputs.backfill }}
+        run: |
+          set -e
+          if [ -n "$BACKFILL_INPUT" ]; then
+            python sync_daily.py --backfill "$BACKFILL_INPUT"
+          elif [ -n "$DATE_INPUT" ]; then
+            python sync_daily.py --date "$DATE_INPUT"
+          else
+            python sync_daily.py
+          fi
+
+      - name: 安装依赖
+        run: npm ci || npm install
+
+      - name: 构建站点
+        run: npx hexo clean && npx hexo generate
+
+      - name: 归档可用产物
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: 回写新增文章
+        run: |
+          git config user.name  "chronicle-bot"
+          git config user.email "chronicle-bot@users.noreply.github.com"
+          git add source/_posts/
+          if git diff --staged --quiet; then
+            echo "无新文章,跳过提交"
+            exit 0
+          fi
+          git commit -m "chore: 同步日报文章 $(date -u +%Y-%m-%d)"
+          git push || echo "推送失败(可能被并发任务抢先),下次运行会自动补上"
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 发布到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

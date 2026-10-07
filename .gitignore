@@ -1,0 +1,9 @@
+node_modules/
+public/
+db.json
+.log/
+deploy/
+.DS_Store
+*.log
+__pycache__/
+*.pyc

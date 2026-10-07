@@ -1,0 +1,219 @@
+# Chronicle 主题配置（覆盖 hexo-theme-async 默认值）
+# 结构严格对齐主题 1.2.14 的 _config.yml，避免层级写错导致渲染报错
+
+# ---------- 用户信息 ----------
+user:
+  name: Chronicle
+  first_name: Chronicle
+  last_name:
+  email:
+  domain: yaorenyi.github.io/chronicle
+  avatar: /img/avatar.jpg
+  describe: 每天记录 AI 圈发生了什么。
+
+# ---------- 站点 logo ----------
+favicon:
+  logo: /img/favicon.svg
+  icon16: /img/favicon.svg
+  icon32: /img/favicon.svg
+  appleTouchIcon:
+  webmanifest:
+  visibilitychange: false
+  hidden: /failure.ico
+  showText: favicon.showText
+  hideText: favicon.hideText
+
+# ---------- 主题资源 ----------
+# internal_provider/third_party_provider 保持主题默认（local / unpkg）
+assets:
+  internal_provider: local
+  third_party_provider: unpkg
+  plugin:
+    row:
+      css: css/plugins/bootstrap.row.css
+    typing:
+      js: js/plugins/typing.js
+    hexo_theme_async:
+      js: js/main.js
+  icons:
+    type: font
+    css: css/plugins/font-awesome.min.css
+    js:
+
+# ---------- CDN 自定义（保持主题默认的嵌套结构，全部留空） ----------
+cdn:
+  css:
+  js:
+    head:
+    base:
+    async:
+    defer:
+
+# ---------- 首页 banner ----------
+banner:
+  default:
+    type: img
+    bgurl: /img/banner.png
+    bannerText: Chronicle
+    position: top
+    fit: cover
+  index:
+    bannerTitle: Chronicle
+    bannerText: 每天记录 AI 圈发生了什么。
+    videoUrl:
+  archive:
+    bannerTitle: 归档
+    bannerText: 全部 AI 日报
+  links:
+    bannerTitle: 友链
+    bannerText: A link to a friend's website
+  comment:
+    bannerTitle: 留言
+    bannerText: The magic tree hole
+  about:
+    bannerTitle: 关于
+    bannerText: About me
+
+# ---------- 侧边栏 ----------
+sidebar:
+  typedTextPrefix: I'm
+  typedText:
+  info:
+    - key: sidebar.location
+      val: 地球
+  social:
+    - name: Github
+      icon: fab fa-github
+      url: https://github.com/yaorenyi/chronicle
+
+# ---------- 关于页 ----------
+about:
+  title: 关于 Chronicle
+  introduction: Chronicle 是一个自动化的 AI 日报博客，每天把 AI HOT 采集到的行业动态整理成文章归档。
+  blog:
+    <ul class="trm-list">
+      <li>程序：Hexo</li>
+      <li>主题：Hexo-theme-async</li>
+      <li>数据源：AI HOT</li>
+    </ul>
+  privacy: 本网站内容全部来自公开网络信息，不收集访客个人数据。
+
+# ---------- 页脚 ----------
+footer:
+  powered:
+    enable: true
+  beian:
+    enable: false
+    icp:
+  copyrightYear:
+  live_time:
+    enable: false
+    prefix: footer.tips
+    start_time: 10/07/2026 00:00:00
+  custom_text:
+
+# ---------- 文章相关 ----------
+reward:
+  enable: false
+  comment: reward.comment
+  methods:
+
+toc:
+  enable: true
+  list_number: true
+  max_depth: 3
+  min_depth: 1
+
+archive:
+  type: more
+
+creative_commons:
+  license: by-nc-sa
+  language: deed.zh
+  post: false
+  clipboard: false
+
+cover:
+  default: /img/block.jpg
+  type: img
+
+post_pagination:
+  enable: true
+  type: large
+
+lazyload:
+  enable: true
+
+# ---------- 站点统计 / 评论 ----------
+webAnalytics:
+  enable: false
+  baidu:
+  google:
+  tencent:
+    sid:
+    cid:
+
+comment:
+  bComments:
+    enable: false
+    env:
+  twikoo:
+    enable: false
+    envId:
+
+# ---------- 主题模式 ----------
+theme:
+  switch: true
+  default: style-light
+
+sw: false
+
+wordcount:
+  enable: false
+  count: true
+  time: true
+
+katex:
+  copy_tex: true
+  global: false
+  options: {}
+
+# ---------- 搜索 ----------
+# type: engine 使用谷歌搜索引擎，无需额外插件
+search:
+  enable: true
+  type: engine
+  href: 'https://www.google.com/search?q=site:'
+  domain:
+
+swup: false
+
+# ---------- 时间格式 ----------
+datetime_foramt:
+  post_card:
+    date: YY/MM/DD
+    time: HH:mm
+    cover_date: DD
+    cover_date2: YYYY/MM
+  post_info:
+    date: MM/DD
+    time: HH:mm
+  archive:
+    date: MM/DD
+    time: HH:mm
+
+# ---------- 首页分类卡片 ----------
+categorie_card:
+  enable: false
+  len: 2
+  list:
+
+# ---------- 右下角按钮 ----------
+rightside:
+  readmode: true
+  aside: false
+
+# ---------- 错误图 ----------
+error_img:
+  flink: /img/friend_404.gif
+  post_page: /img/404.jpg
