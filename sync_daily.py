@@ -269,6 +269,11 @@ def render_post(report, buckets, fell_back):
     y, m, d = (int(x) for x in date_str.split("-"))
     title = "AI 日报 %s · %d 条" % (date_str, total)
 
+    # 文章发布时间统一为当天 08:00(北京时间)。
+    # 不用 generatedAt:部分日期的日报在源站延迟发布(如 15:47、18:29),
+    # 会让归档列表的时间参差不齐。
+    dt = datetime(y, m, d, 8, 0, 0, tzinfo=timezone(timedelta(hours=8)))
+
     L = []
     L.append("---")
     L.append("title: %s" % front_matter_quote(title))
