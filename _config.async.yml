@@ -79,7 +79,7 @@ sidebar:
   typedTextPrefix: I'm
   typedText:
   info:
-    - key: sidebar.location
+    - key: sidebar.residence
       val: 地球
   social:
     - name: Github
