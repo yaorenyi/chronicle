@@ -37,6 +37,8 @@ SECTIONS = [
     ("sec-industry", "行业动态", "📈"),
     ("sec-paper", "论文研究", "📚"),
     ("sec-tips", "技巧与观点", "💡"),
+    # 快讯:源站的 flashes 是独立栏目,不与上面五个主题版块混排
+    ("sec-flash", "快讯", "⚡"),
 ]
 
 SECTION_KEYWORDS = {
@@ -237,13 +239,16 @@ def collect(report):
                 "time": "",
             })
 
+    # 快讯(flashes)在源站是独立栏目,保留原样单独成栏,
+    # 不做 guess_section 归类——否则会被关键词打分打散进五个主题版块,
+    # 导致源站的「快讯」栏目消失。
     for f in report.get("flashes", []):
         t = f.get("title", "")
         if is_duplicate(t, seen):
             dropped += 1
             continue
         seen.append(norm_title(t))
-        sid = guess_section(t)
+        sid = "sec-flash"
         buckets[sid].append({
             "title": t,
             "summary": "",
@@ -261,6 +266,8 @@ def render_post(report, buckets, fell_back):
     date_str = report["date"]
     dt = to_beijing(report.get("generatedAt")) or datetime.now(timezone(timedelta(hours=8)))
     total = sum(len(v) for v in buckets.values())
+    # 实际有内容的版块数(不是 SECTIONS 的声明数,空栏目不该被计入)
+    used_sections = sum(1 for v in buckets.values() if v)
     sources = set()
     for v in buckets.values():
         for it in v:
@@ -283,14 +290,14 @@ def render_post(report, buckets, fell_back):
     L.append("toc: true")
     L.append("comments: false")
     L.append("description: %s" % front_matter_quote(
-        clip("%s 今日 %d 条 AI 资讯，覆盖五个版块。" % (date_str, total), 100)))
+        clip("%s 今日 %d 条 AI 资讯，覆盖 %d 个版块。" % (date_str, total, used_sections), 100)))
     L.append("---")
     L.append("")
 
     # 概要卡片
     lead = report.get("lead") or {}
     L.append("> **共 %d 条 · %d 个信源 · %d 个版块** · %s" % (
-        total, len(sources), len(SECTIONS), _window_text(report)))
+        total, len(sources), used_sections, _window_text(report)))
     L.append(">")
     if lead.get("title"):
         L.append("> **今日头条**：%s" % md_escape(lead.get("title")))
