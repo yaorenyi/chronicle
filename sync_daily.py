@@ -29,6 +29,10 @@ UA = "aihot-skill/1.2.1 (+https://aihot.virxact.com/aihot-skill/)"
 ROOT = os.path.dirname(os.path.abspath(__file__))
 POSTS_DIR = os.path.join(ROOT, "source", "_posts")
 
+LEAD_EMOJI = "🔥"
+# 头条段落实测最长约 200 字,放宽到此值让它完整呈现,不再被截断成半句
+LEAD_MAX = 240
+
 WEEKDAY = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
 
 SECTIONS = [
@@ -281,6 +285,10 @@ def render_post(report, buckets, fell_back):
     # 会让归档列表的时间参差不齐。
     dt = datetime(y, m, d, 8, 0, 0, tzinfo=timezone(timedelta(hours=8)))
 
+    lead = report.get("lead") or {}
+    lead_title = (lead.get("title") or "").strip()
+    lead_para = (lead.get("leadParagraph") or lead.get("summary") or "").strip()
+
     L = []
     L.append("---")
     L.append("title: %s" % front_matter_quote(title))
@@ -289,21 +297,30 @@ def render_post(report, buckets, fell_back):
     L.append("categories: [AI 日报]")
     L.append("toc: true")
     L.append("comments: false")
-    L.append("description: %s" % front_matter_quote(
-        clip("%s 今日 %d 条 AI 资讯，覆盖 %d 个版块。" % (date_str, total, used_sections), 100)))
+    # 有头条就用头条做摘要:首页列表里它比"共 N 条"更能说明今天发生了什么
+    if lead_title:
+        desc = "今日头条：%s｜%s 共 %d 条 · %d 个版块" % (lead_title, date_str, total, used_sections)
+    else:
+        desc = "%s 今日 %d 条 AI 资讯，覆盖 %d 个版块。" % (date_str, total, used_sections)
+    L.append("description: %s" % front_matter_quote(clip(desc, 100)))
     L.append("---")
     L.append("")
 
-    # 概要卡片
-    lead = report.get("lead") or {}
-    L.append("> **共 %d 条 · %d 个信源 · %d 个版块** · %s" % (
+    # 今日头条:当天最重要的那一条,独立成块放在正文最顶部。
+    # 原先它和统计信息一起塞在引用块里、还排在"共 N 条"之后,
+    # 视觉层级太低,容易被当成统计说明略过。
+    if lead_title:
+        L.append("## %s 今日头条" % LEAD_EMOJI)
+        L.append("")
+        L.append("**%s**" % md_escape(lead_title))
+        L.append("")
+        if lead_para:
+            L.append(md_escape(clip(lead_para, LEAD_MAX)))
+            L.append("")
+
+    # 统计元信息降为次级引用块,不再喧宾夺主
+    L.append("> 共 %d 条 · %d 个信源 · %d 个版块 · %s" % (
         total, len(sources), used_sections, _window_text(report)))
-    L.append(">")
-    if lead.get("title"):
-        L.append("> **今日头条**：%s" % md_escape(lead.get("title")))
-        if lead.get("leadParagraph") or lead.get("summary"):
-            L.append(">")
-            L.append("> %s" % md_escape(clip(lead.get("leadParagraph") or lead.get("summary"), 150)))
     L.append("")
 
     if fell_back:
