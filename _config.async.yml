@@ -103,7 +103,7 @@ footer:
   powered:
     enable: true
   beian:
-    enable: false
+    enable: true
     icp: 粤ICP备2026191529号
   copyrightYear:
   live_time:
