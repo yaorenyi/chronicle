@@ -1,6 +1,11 @@
 name: 构建并发布 Chronicle
 
 on:
+  # 代码/配置改动后自动重新构建发布。
+  # 回写文章用的是 actions/checkout 自带的 GITHUB_TOKEN,
+  # GitHub 不会因 GITHUB_TOKEN 的推送再次触发 workflow,故不会自触发循环。
+  push:
+    branches: [main]
   schedule:
     # GitHub 的 schedule 在高峰期会延迟甚至被丢弃(实测延迟可达 6 小时),
     # 无法保证精确时间,因此这里只作备份。
