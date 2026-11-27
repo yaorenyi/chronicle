@@ -104,7 +104,7 @@ footer:
     enable: true
   beian:
     enable: false
-    icp:粤ICP备2026191529号
+    icp: 粤ICP备2026191529号
   copyrightYear:
   live_time:
     enable: false
